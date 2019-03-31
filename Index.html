@@ -19,10 +19,18 @@
   <div class="container">
   <div class="row">
   <div class="col-lg-12" id="idea-app">
-  <h1>Open IDEO</h1>
+  <h1>Fuel pre-paid checker</h1>
   <p>Welcome, {{user.name}}</p>
   <p>Message: {{message}}</p>
   
+  
+  <div v-if="!isAuthenticated">
+    <h2>Find customer</h2>
+    <label for="Card Number">Fuelcard Number</label>
+    <input type="number" id="fuelcard-number" name="number" v-model='customer.number'>
+    <div class="btn btn-primary" id="find-customer-button">Find Customer</div>
+    <br>
+    </div>  
   
   <div v-if="!isAuthenticated">
     <h2>Register</h2>
@@ -104,6 +112,10 @@
          email: '', 
          name: '',
       },
+      customer: {
+         number: '', 
+         name: '',
+      },      
       login: {
         name: '', 
         email: ''
