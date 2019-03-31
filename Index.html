@@ -30,7 +30,7 @@
     <input type="number" id="fuelcard-number" name="number" v-model='customer.number'>
     <div class="btn btn-primary" id="find-customer-button">Find Customer</div>
     <br>
-    </div>  
+  </div>  
   
   <div v-if="!isAuthenticated">
     <h2>Register</h2>
@@ -172,6 +172,15 @@
   
   });
   
+ document.querySelector('#find-customer-button').addEventListener('click', function(){
+    var customer = {
+      number: app.customer.number, 
+    }; 
+  
+    google.script.run.withSuccessHandler(onCustomerSearchResult).findCustomer(customer); 
+  
+  });
+  
    document.querySelector('#login-button').addEventListener('click', function(){
     var user = {
       email: app.login.email, 
@@ -196,6 +205,15 @@
     }
         app.message = response.message;
   }
+  
+  function onCustomerSearchResult(response){
+ 
+   if(response.success) {
+      //app.user = response.authUser; 
+      //app.isAuthenticated = true;  
+    }
+    app.message = response.message; 
+  }  
   
   function onUserAuthentication(response){
   

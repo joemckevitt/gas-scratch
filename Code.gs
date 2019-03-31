@@ -28,6 +28,35 @@ function registerUser(user){
   }
 }
 
+function findCustomer(customer){
+  Logger.log("find customer invoked " + customer.number);
+  var data = CUSTOMERS_TABLE.getDataRange().getValues();
+ 
+   /*return {
+      success: true, 
+      message: "Hard coded customer found", 
+    };*/
+  
+  if (tableContainsCustomer(data, customer)){
+  
+  Logger.log("custoemr found");
+  
+   return {
+      success: true, 
+      message: "Customer with fuel card number " + customer.number + " found", 
+      //authUser: user
+    }; 
+  
+  } else {
+    Logger.log("custoemr not found");
+    return {
+     error: true, 
+     message: "Customer with fuel card number " + customer.number + " NOT found", 
+    };
+  }
+
+}
+
 function loginUser(user){
 var data = USERS_TABLE.getDataRange().getValues();
   
@@ -54,6 +83,29 @@ function getTableData(table){
 
 }
 
+function tableContainsCustomer(data, customer){
+
+  var tableContainsCustomer = false; 
+  
+  for( var i = 0; i < data.length; i++){
+  
+    if (data[i][0]){
+      Logger.log("customer.number " + customer.number);      
+      Logger.log("cell " + data[i][0]);
+      if(data[i][0].toString() == customer.number.toString()){
+
+      Logger.log("match found " + data[i][0]);        
+        tableContainsCustomer = true; 
+      } 
+    
+    }
+  
+  }
+    
+  return tableContainsCustomer; 
+
+}
+
 function tableContainsUser(data, user){
 
   var tableContainsUser = false; 
@@ -70,8 +122,7 @@ function tableContainsUser(data, user){
     }
   
   }
-  
-  
+    
   return tableContainsUser; 
 
 }
@@ -96,10 +147,6 @@ function addIdea(user, idea){
     };
   
   }
-
-  
-  
-  
 }
 
 function getIdeas(){
