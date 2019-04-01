@@ -18,12 +18,12 @@
   <body>
   <div class="container">
   <div class="row">
-  <div class="col-lg-12" id="idea-app">
+  <div class="col-lg-12" id="fueller-app">
   <h1>Fueller pre-paid checker</h1>
   <p>Message: {{message}}</p>
   
   
-  <div v-if="!isAuthenticated">
+  <div>
     <h2>Find customer</h2>
     <label for="Card Number">Fuelcard Number</label>
     <input type="number" id="fuelcard-number" name="number" v-model='customer.number'>
@@ -32,41 +32,7 @@
     <div class="btn btn-primary" id="find-customer-button">Verify</div>
     <br>
   </div>  
-  
-  <div v-if="!isAuthenticated">
-    <h2>Register</h2>
-    <label for="name">Name</label>
-    <input type="text" id="register-name" name="name" v-model='register.name'>
-    <label for="email">Email</label>
-    <input type="text" id="register-email" name="email" v-model='register.email'>
-    <div class="btn btn-primary" id="register-button">Register</div>
-    <br>
-    <h2>Already Registed, Login Here</h2>
-    <label for="login-name">Name</label>
-    <input type="text" id="login-name" name="login-name" v-model='login.name'>
-    <label for="login-email">Email</label>
-    <input type="text" id="login-email" name="login-email" v-model='login.email'>
-    <div class="btn btn-primary" id="login-button">Login</div>
-    <br>
-  </div>
-  
-  <div class="authenticated" v-if="isAuthenticated">
-    <h2>Submit an Idea</h2>
-    <label for="idea-name">Idea Name</label>
-    <br>
-    <input type="text" id="idea-name" name="idea-name" v-model="idea.name">
-    <br>
-    <label for="idea-image">Image Link</label>
-    <br>
-    <input type="text" id="idea-image" name="idea-image" v-model="idea.image">
-    <br>
-    <label for="idea-description">Idea Description</label>
-    <br>
-    <textarea id="idea-description" name="idea-description" v-model="idea.description"></textarea>
-    <div class="btn btn-primary" id="idea-button" v-on:click="submitIdea">Submit Your Idea</div>
-   
-  </div>
-  
+    
   <h2>Customers</h2>
   <p>List of customers</p>
   <div class="customers-container card-deck">
@@ -76,25 +42,8 @@
           {{ customer.name }} 
         </li>
       </ul>
-      <div class="btn btn-primary" v-on:click="upvoteIdea(idea); idea.voteCount++;">Do something</div>
      </div>
   </div>
-  
-  <h2>Ideas</h2>
-  <p>Login or register to vote. You can only vote once.</p>
-  <div class="ideas-container card-deck">
-     <div class="card" v-for="idea in ideas" v-if="ideas.length > 0">
-        <img class="card-img-top img-fluid" :src="idea.image">
-        <div class="card-block">
-         <div class="card-title">{{idea.name}}</div>
-         <p>{{idea.description}}</p>
-         <p>Submitted By: {{idea.email}}</p>
-         <p>Votes: {{idea.voteCount}}</p>
-         <div class="btn btn-primary" v-on:click="upvoteIdea(idea); idea.voteCount++;" v-if="isAuthenticated">Upvote This Idea</div>
-        </div> 
-     </div>
-  </div>
-    
   </div>
   </div>
   </div>
@@ -102,78 +51,25 @@
   
   
   var app = new Vue({
-    el: '#idea-app', 
-    data: {
-      isAuthenticated: false, 
-      user : {
-         name: '', 
-         email: ''
-      }, 
-      register: {
-         email: '', 
-         name: '',
-      },
+    el: '#fueller-app', 
+    data: { 
       customer: {
          number: '', 
          name: '',
          amount: '',
       },      
-      login: {
-        name: '', 
-        email: ''
-      }, 
-      idea: {
-        name: '', 
-        description: '',
-        image: '', 
-      },
-      ideas: [], 
       customers: [],
       message: '', 
     
     }, 
-    methods: {
-    
-    submitIdea: function(){
-       var user = {
-        email: this.user.email, 
-        name: this.user.name,
-       }; 
-    
-       var idea = {
-         name: this.idea.name, 
-         description: this.idea.description,
-         image: this.idea.image, 
-      }; 
-  
-      google.script.run.withSuccessHandler(onUserAuthentication).addIdea(user, idea);
-      google.script.run.withSuccessHandler(renderIdeas).getIdeas();
-    
-    }, 
-    upvoteIdea: function(idea){ 
-      google.script.run.withSuccessHandler(renderIdeas).addVote(this.user, idea); 
-      console.log(idea); 
-    }
-    
+    methods: {    
     }, 
     mounted: function(){
-    
-//    google.script.run.withSuccessHandler(renderIdeas).getIdeas();
-    google.script.run.withSuccessHandler(renderCustomers).getCustomers();    
+      google.script.run.withSuccessHandler(renderCustomers).getCustomers();    
     }
   
   }); 
-  
- document.querySelector('#register-button').addEventListener('click', function(){
-    var user = {
-      email: app.register.email, 
-      name: app.register.name,
-    }; 
-  
-    google.script.run.withSuccessHandler(onUserAuthentication).registerUser(user); 
-  
-  });
-  
+    
  document.querySelector('#find-customer-button').addEventListener('click', function(){
     var customer = {
       number: app.customer.number, 
@@ -183,25 +79,7 @@
     google.script.run.withSuccessHandler(onCustomerSearchResult).findCustomer(customer); 
   
   });
-  
-   document.querySelector('#login-button').addEventListener('click', function(){
-    var user = {
-      email: app.login.email, 
-      name: app.login.name,
-    }; 
-  
-    google.script.run.withSuccessHandler(onUserAuthentication).loginUser(user); 
-  
-  });
-  
-  
-  function renderIdeas(response){
-    if (response.success && response.ideas){
-      app.ideas = response.ideas; 
-    }
-    app.message = response.message; 
-  }
-  
+    
   function renderCustomers(response){
     if (response.success && response.customers){
       app.customers = response.customers;
@@ -218,16 +96,6 @@
     }
     app.message = response.message; 
   }  
-  
-  function onUserAuthentication(response){
-  
-    if(response.success) {
-      app.user = response.authUser; 
-      app.isAuthenticated = true;  
-    }
-    app.message = response.message; 
-  }
-  
   
   </script>
   </body>

@@ -108,7 +108,7 @@ function tableContainsCustomer(data, customer){
         if (input_amount < customer.balance) {
           global_message = "Authorised";
         } else {
-          global_message = "NOT Authorised - Request customer to topup"; 
+          global_message = "NOT Authorised - Request customer to top-up"; 
         }
         
         //global_message = "Customer with fuel card number: " + customer.number + ", Customer: " + customer.name + " with balance of £" + customer.balance; 
