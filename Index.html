@@ -19,8 +19,7 @@
   <div class="container">
   <div class="row">
   <div class="col-lg-12" id="idea-app">
-  <h1>Fuel pre-paid checker</h1>
-  <p>Welcome, {{user.name}}</p>
+  <h1>Fueller pre-paid checker</h1>
   <p>Message: {{message}}</p>
   
   
@@ -28,7 +27,9 @@
     <h2>Find customer</h2>
     <label for="Card Number">Fuelcard Number</label>
     <input type="number" id="fuelcard-number" name="number" v-model='customer.number'>
-    <div class="btn btn-primary" id="find-customer-button">Find Customer</div>
+    <label for="fuel-amount">Amount</label>
+    <input type="number" id="amount" name="number" v-model='customer.amount'>
+    <div class="btn btn-primary" id="find-customer-button">Verify</div>
     <br>
   </div>  
   
@@ -115,6 +116,7 @@
       customer: {
          number: '', 
          name: '',
+         amount: '',
       },      
       login: {
         name: '', 
@@ -175,6 +177,7 @@
  document.querySelector('#find-customer-button').addEventListener('click', function(){
     var customer = {
       number: app.customer.number, 
+      amount: app.customer.amount, 
     }; 
   
     google.script.run.withSuccessHandler(onCustomerSearchResult).findCustomer(customer); 

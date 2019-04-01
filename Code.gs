@@ -84,6 +84,10 @@ function tableContainsCustomer(data, customer){
 
   var tableContainsCustomer = false; 
   
+  var input_amount = customer.amount;
+  
+  global_message = "No Customer found for that fuel card number";
+  
   for( var i = 0; i < data.length; i++){
   
     if (data[i][0]){
@@ -98,10 +102,16 @@ function tableContainsCustomer(data, customer){
         customer = {
           number: data[i][0], 
           name: data[i][1],
-          amount: data[i][2],
+          balance: data[i][2],
         }
         
-        global_message = "Customer with fuel card number: " + customer.number + ", Customer: " + customer.name + " with balance of £" + customer.amount; 
+        if (input_amount < customer.balance) {
+          global_message = "Authorised";
+        } else {
+          global_message = "NOT Authorised - Request customer to topup"; 
+        }
+        
+        //global_message = "Customer with fuel card number: " + customer.number + ", Customer: " + customer.name + " with balance of £" + customer.balance; 
         
         tableContainsCustomer = true; 
       } 
