@@ -6,7 +6,7 @@ function findCustomer(customer){
   Logger.log("find customer invoked " + customer.number);
   var data = CUSTOMERS_TABLE.getDataRange().getValues();
   
-  if (tableContainsCustomer(data, customer)){
+  if (prePaidLogic(data, customer)){
   
   Logger.log("customer found");
   
@@ -17,11 +17,10 @@ function findCustomer(customer){
     }; 
   
   } else {
-    Logger.log("custoemr not found");
+    Logger.log("customer not found");
     return {
      error: true, 
-     message: global_message,
-     //message: "Customer with fuel card number " + customer.number + " NOT found", 
+     message: global_message, 
     };
   }
 
@@ -33,7 +32,7 @@ function getTableData(table){
 
 }
 
-function tableContainsCustomer(data, customer){
+function prePaidLogic(data, customer){
 
   var tableContainsCustomer = false; 
   
@@ -75,26 +74,6 @@ function tableContainsCustomer(data, customer){
     
   return tableContainsCustomer; 
 
-}
-
-function getCustomers(){
-
-  var data = getTableData(CUSTOMERS_TABLE); 
-  var customers = [];   
-  for (var i = 0; i < data.length; i++){
-    
-    var customer = {
-      name: data[i][1],
-    }
-    
-    customers.push(customer); 
-  }
-  
-  return {
-      success: true, 
-      message: "Customers have been rendered.", 
-      customers: customers, 
-    }; 
 }
 
 function doGet(){

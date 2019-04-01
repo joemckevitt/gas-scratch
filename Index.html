@@ -32,18 +32,6 @@
     <div class="btn btn-primary" id="find-customer-button">Verify</div>
     <br>
   </div>  
-    
-  <h2>Customers</h2>
-  <p>List of customers</p>
-  <div class="customers-container card-deck">
-     <div>
-       <ul>
-        <li v-for="customer in customers">
-          {{ customer.name }} 
-        </li>
-      </ul>
-     </div>
-  </div>
   </div>
   </div>
   </div>
@@ -59,7 +47,7 @@
          amount: '',
       },      
       customers: [],
-      message: '', 
+      message: 'Please enter card number', 
     
     }, 
     methods: {    
@@ -79,13 +67,6 @@
     google.script.run.withSuccessHandler(onCustomerSearchResult).findCustomer(customer); 
   
   });
-    
-  function renderCustomers(response){
-    if (response.success && response.customers){
-      app.customers = response.customers;
-    }
-        app.message = response.message;
-  }
   
   function onCustomerSearchResult(response){
  
