@@ -4,6 +4,7 @@ var USERS_TABLE = spreadsheet.getSheets()[0];
 var IDEAS_TABLE = spreadsheet.getSheets()[1]; 
 var VOTES_TABLE = spreadsheet.getSheets()[2]; 
 var CUSTOMERS_TABLE = spreadsheet.getSheets()[3]; 
+var global_message;
 
 function registerUser(user){
 
@@ -31,11 +32,6 @@ function registerUser(user){
 function findCustomer(customer){
   Logger.log("find customer invoked " + customer.number);
   var data = CUSTOMERS_TABLE.getDataRange().getValues();
- 
-   /*return {
-      success: true, 
-      message: "Hard coded customer found", 
-    };*/
   
   if (tableContainsCustomer(data, customer)){
   
@@ -43,15 +39,16 @@ function findCustomer(customer){
   
    return {
       success: true, 
-      message: "Customer with fuel card number " + customer.number + " found", 
-      //authUser: user
+      message: global_message,
+      customer: customer
     }; 
   
   } else {
     Logger.log("custoemr not found");
     return {
      error: true, 
-     message: "Customer with fuel card number " + customer.number + " NOT found", 
+     message: global_message,
+     //message: "Customer with fuel card number " + customer.number + " NOT found", 
     };
   }
 
@@ -90,11 +87,22 @@ function tableContainsCustomer(data, customer){
   for( var i = 0; i < data.length; i++){
   
     if (data[i][0]){
+      
       Logger.log("customer.number " + customer.number);      
       Logger.log("cell " + data[i][0]);
+      
       if(data[i][0].toString() == customer.number.toString()){
 
-      Logger.log("match found " + data[i][0]);        
+        Logger.log("match found " + data[i][0]);   
+        
+        customer = {
+          number: data[i][0], 
+          name: data[i][1],
+          amount: data[i][2],
+        }
+        
+        global_message = "Customer with fuel card number: " + customer.number + ", Customer: " + customer.name + " with balance of £" + customer.amount; 
+        
         tableContainsCustomer = true; 
       } 
     
