@@ -36,7 +36,10 @@ function prePaidLogic(data, customer){
 
   var tableContainsCustomer = false; 
   
-  var input_amount = customer.amount;
+  var amountOfFuelPuchased = customer.amount;
+
+  // apply discount rate - at 4%
+  var discountedAmount = amountOfFuelPuchased * 0.96;
   
   global_message = "No Customer found for that fuel card number";
   
@@ -57,13 +60,11 @@ function prePaidLogic(data, customer){
           balance: data[i][2],
         }
         
-        if (input_amount < customer.balance) {
+        if (discountedAmount < customer.balance) {
           global_message = "Authorised";
         } else {
           global_message = "NOT Authorised - Request customer to top-up"; 
         }
-        
-        //global_message = "Customer with fuel card number: " + customer.number + ", Customer: " + customer.name + " with balance of £" + customer.balance; 
         
         tableContainsCustomer = true; 
       } 
