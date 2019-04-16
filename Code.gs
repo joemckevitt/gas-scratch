@@ -1,5 +1,5 @@
 var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
-var CUSTOMERS_TABLE = spreadsheet.getSheets()[3]; 
+var CUSTOMERS_TABLE = spreadsheet.getSheetByName('Customers'); 
 var global_message;
 
 function findCustomer(customer){
