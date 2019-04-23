@@ -1,5 +1,5 @@
 var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
-var CUSTOMERS_TABLE = spreadsheet.getSheetByName('Customers'); 
+var CUSTOMERS_TABLE = spreadsheet.getSheetByName('Pre-Paid Readings'); 
 var global_message;
 
 function findCustomer(customer){
