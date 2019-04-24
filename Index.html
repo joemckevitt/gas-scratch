@@ -18,18 +18,22 @@
   <body>
   <div class="container">
   <div class="row">
-  <div class="col-lg-12" id="fueller-app">
-  <h1>Fueller pre-paid checker</h1>
-  <p><img src="https://drive.google.com/uc?export=download&id=1otKEftTn-4BRWkzoTpOH6rLTvMcntZIC" width="275" height="100"> </p>
   
+  <!-- Reference to the vue instance -->
+  <div class="col-lg-12" id="fueller-app">
+  
+  <h1>Fueller pre-paid checker</h1>
+  <p><img src="https://drive.google.com/uc?export=download&id=1ogUtDpuTv2Z3cUoJlN3D_JaWMA02Tmz1" width="275" height="100"> </p>
  
   <p>Pump prices: Unleaded £1.27.9, Diesel 1.27.9<p>
   <p>Fueller prices: Unleaded £1.24.9, Diesel 1.20.9<p>
-  <h4><p>Message: {{message}}</p></h4>
   
+  <h4 v-if="isAuthorised"><font color="green">Authorised</font></h4>
+  <h4 v-else-if="customerFound"><font color="red">NOT Authorised - Request customer to top-up</font></h4>
+  <h4 v-else-if="searchPerformed"><font color="red">No Customer found for that fuel card number</font></h4>
   
   <div>
-    <h2>Find customer</h2>
+    <h2>Please enter card number</h2>
     <label for="Card Number">Fuelcard Number (e.g 009)</label>
     <br>
     <input type="number" id="fuelcard-number" name="number" v-model='customer.number'>
@@ -56,8 +60,10 @@
          amount: '',
       },      
       customers: [],
-      message: 'Please enter card number', 
-    
+      message: '', 
+      isAuthorised: false,
+      customerFound: false,
+      searchPerformed: false
     }, 
     methods: {    
     }, 
@@ -81,9 +87,15 @@
  
    if(response.success) {
       app.customer = response.customer; 
-      //TODO add the required isAuthenticated post search
-      //app.isAuthenticated = true;  
+      app.isAuthorised = response.isAuthorised;
+      app.customerFound = response.customerFound;
+    } else {
+      app.customerFound = false;
+      app.isAuthorised = response.isAuthorised;
+      app.customerFound = response.customerFound;
     }
+    
+    app.searchPerformed = true;
     app.message = response.message; 
   }  
   

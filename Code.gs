@@ -3,6 +3,8 @@ var masterSheet = 'Pre-Paid Readings';
 var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
 var CUSTOMERS_TABLE = spreadsheet.getSheetByName(masterSheet); 
 var global_message;
+var isAuthorised;
+var customerFound;
 
 function findCustomer(customer){
   Logger.log("find customer invoked " + customer.number);
@@ -15,14 +17,18 @@ function findCustomer(customer){
    return {
       success: true, 
       message: global_message,
-      customer: customer
+      customer: customer,
+      isAuthorised: isAuthorised,
+      customerFound: true
     }; 
   
   } else {
     Logger.log("customer not found");
     return {
      error: true, 
-     message: global_message, 
+     message: global_message,
+     isAuthorised: false,
+     customerFound: false
     };
   }
 
@@ -64,8 +70,10 @@ function prePaidLogic(data, customer){
         
         if (discountedAmount < customer.balance) {
           global_message = "Authorised";
+          isAuthorised = true;
         } else {
           global_message = "NOT Authorised - Request customer to top-up"; 
+          isAuthorised = false;
         }
         
         tableContainsCustomer = true; 
