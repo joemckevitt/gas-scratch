@@ -2,7 +2,7 @@ var masterSheet = 'Pre-Paid Readings';
 
 var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
 var CUSTOMERS_TABLE = spreadsheet.getSheetByName(masterSheet); 
-var global_message;
+
 var isAuthorised;
 var customerFound;
 
@@ -16,7 +16,6 @@ function findCustomer(customer){
   
    return {
       success: true, 
-      message: global_message,
       customer: customer,
       isAuthorised: isAuthorised,
       customerFound: true
@@ -26,7 +25,6 @@ function findCustomer(customer){
     Logger.log("customer not found");
     return {
      error: true, 
-     message: global_message,
      isAuthorised: false,
      customerFound: false
     };
@@ -49,8 +47,6 @@ function prePaidLogic(data, customer){
   // apply discount rate - at 4%
   var discountedAmount = amountOfFuelPuchased * 0.96;
   
-  global_message = "No Customer found for that fuel card number";
-  
   for( var i = 0; i < data.length; i++){
   
     if (data[i][0]){
@@ -69,10 +65,10 @@ function prePaidLogic(data, customer){
         }
         
         if (discountedAmount < customer.balance) {
-          global_message = "Authorised";
+          Logger.log("Authorised"); 
           isAuthorised = true;
         } else {
-          global_message = "NOT Authorised - Request customer to top-up"; 
+          Logger.log("NOT Authorised - Request customer to top-up"); 
           isAuthorised = false;
         }
         
