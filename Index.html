@@ -60,7 +60,6 @@
          amount: '',
       },      
       customers: [],
-      message: '', 
       isAuthorised: false,
       customerFound: false,
       searchPerformed: false
@@ -95,8 +94,7 @@
       app.customerFound = response.customerFound;
     }
     
-    app.searchPerformed = true;
-    app.message = response.message; 
+    app.searchPerformed = true; 
   }  
   
   </script>
