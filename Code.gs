@@ -4,6 +4,7 @@ var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 var CUSTOMERS_TABLE = spreadsheet.getSheetByName(masterSheet); 
 var isAuthorised;
 var customerFound;
+var shortfall;
 
 function findCustomer(customer){
   Logger.log("find customer invoked " + customer.number);
@@ -11,14 +12,24 @@ function findCustomer(customer){
   
   if (prePaidLogic(data, customer)){
   
-  Logger.log("customer found");
-  
-   return {
-      success: true, 
-      customer: customer,
-      isAuthorised: isAuthorised,
-      customerFound: true
-    }; 
+    Logger.log("customer found");
+    
+    if (isAuthorised == false) {
+       return {
+          success: true, 
+          customer: customer,
+          isAuthorised: isAuthorised,
+          shortfall: shortfall,
+          customerFound: true
+      };
+    } else {
+         return {
+          success: true, 
+          customer: customer,
+          isAuthorised: isAuthorised,
+          customerFound: true
+      };
+    }
   
   } else {
     Logger.log("customer not found");
@@ -72,7 +83,9 @@ function prePaidLogic(data, customer){
           Logger.log("Fuel amount without any discount (amountOfFuelPuchased) " + amountOfFuelPuchased);  
           Logger.log("Fuel amount with discount (discountedAmount)" + discountedAmount);  
           Logger.log("Balance (customer.balance) " + customer.balance);  
-          Logger.log("Needs to topup :" + topupAmountRequired);   
+          Logger.log("Needs to topup :" + topupAmountRequired);
+          shortfall = topupAmountRequired;
+          shortfall.toFixed(2);
           isAuthorised = false;
         }
         

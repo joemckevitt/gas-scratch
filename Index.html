@@ -29,7 +29,7 @@
   <p>Fueller prices: Unleaded £1.23.9, Diesel 1.25.9<p>
   
   <h4 v-if="isAuthorised"><font color="green">Authorised</font></h4>
-  <h4 v-else-if="customerFound"><font color="red">NOT Authorised - Request customer to top-up</font></h4>
+  <h4 v-else-if="customerFound"><font color="red">NOT Authorised - Request customer to top-up £{{shortfall}}</font></h4>
   <h4 v-else-if="searchPerformed"><font color="red">No Customer found for that fuel card number</font></h4>
   
   <div>
@@ -62,7 +62,8 @@
       customers: [],
       isAuthorised: false,
       customerFound: false,
-      searchPerformed: false
+      searchPerformed: false,
+      shortfall: 10
     }, 
     methods: {    
     }, 
@@ -87,6 +88,9 @@
    if(response.success) {
       app.customer = response.customer; 
       app.isAuthorised = response.isAuthorised;
+      if (app.isAuthorised == false) {
+        app.shortfall = response.shortfall;
+      }
       app.customerFound = response.customerFound;
     } else {
       app.customerFound = false;
