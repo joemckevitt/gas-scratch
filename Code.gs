@@ -68,6 +68,11 @@ function prePaidLogic(data, customer){
           isAuthorised = true;
         } else {
           Logger.log("NOT Authorised - Request customer to top-up");   
+          topupAmountRequired = discountedAmount - customer.balance;
+          Logger.log("Fuel amount without any discount (amountOfFuelPuchased) " + amountOfFuelPuchased);  
+          Logger.log("Fuel amount with discount (discountedAmount)" + discountedAmount);  
+          Logger.log("Balance (customer.balance) " + customer.balance);  
+          Logger.log("Needs to topup :" + topupAmountRequired);   
           isAuthorised = false;
         }
         
