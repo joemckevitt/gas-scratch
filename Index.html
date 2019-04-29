@@ -63,14 +63,8 @@
       isAuthorised: false,
       customerFound: false,
       searchPerformed: false,
-      shortfall: 10
-    }, 
-    methods: {    
-    }, 
-    mounted: function(){
-      google.script.run.withSuccessHandler(renderCustomers).getCustomers();    
-    }
-  
+      shortfall: 0
+    }  
   }); 
     
  document.querySelector('#find-customer-button').addEventListener('click', function(){
