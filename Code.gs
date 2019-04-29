@@ -61,9 +61,6 @@ function prePaidLogic(data, customer){
   
     if (data[i][0]){
       
-      Logger.log("customer.number " + customer.number);      
-      Logger.log("cell " + data[i][0]);
-      
       if(data[i][0].toString() == customer.number.toString()){
 
         Logger.log("match found " + data[i][0]);   
@@ -80,16 +77,18 @@ function prePaidLogic(data, customer){
         } else {
           Logger.log("NOT Authorised - Request customer to top-up");   
           topupAmountRequired = discountedAmount - customer.balance;
-          Logger.log("Fuel amount without any discount (amountOfFuelPuchased) " + amountOfFuelPuchased);  
-          Logger.log("Fuel amount with discount (discountedAmount)" + discountedAmount);  
-          Logger.log("Balance (customer.balance) " + customer.balance);  
+          Logger.log("Fuel amount without any discount (amountOfFuelPuchased) :" + amountOfFuelPuchased);  
+          Logger.log("Fuel amount with discount (discountedAmount) :" + discountedAmount);  
+          Logger.log("Balance (customer.balance) :" + customer.balance);  
           Logger.log("Needs to topup :" + topupAmountRequired);
-          shortfall = topupAmountRequired;
-          shortfall.toFixed(2);
+          var roundedTo2Decs = Math.round(topupAmountRequired * 100) / 100;
+          shortfall = Number(Math.round(roundedTo2Decs+'e2')+'e-2').toFixed(2);
+          Logger.log("Topup value, rounded by 2 decimal places (Shortfall) :" + shortfall);
           isAuthorised = false;
         }
         
-        tableContainsCustomer = true; 
+        tableContainsCustomer = true;
+        break;
       } 
     
     }
