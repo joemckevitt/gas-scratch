@@ -1,14 +1,9 @@
-var masterSheet = 'Pre-Paid Readings';
-
-var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
-var CUSTOMERS_TABLE = spreadsheet.getSheetByName(masterSheet); 
 var isAuthorised;
 var customerFound;
 var shortfall;
 
 function findCustomer(customer){
   Logger.log("find customer invoked " + customer.number);
-  var data = CUSTOMERS_TABLE.getDataRange().getValues();
   
   if (prePaidLogic(data, customer)){
   
@@ -42,11 +37,6 @@ function findCustomer(customer){
 
 }
 
-function getTableData(table){
-
-  return table.getDataRange().getValues();
-
-}
 
 function prePaidLogic(data, customer){
 
@@ -89,13 +79,5 @@ function prePaidLogic(data, customer){
   }
     
   return tableContainsCustomer; 
-
-}
-
-
-function doGet(){
-
-return HtmlService.createHtmlOutputFromFile('Index').setSandboxMode(HtmlService.SandboxMode.IFRAME)
-.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL); 
 
 }

@@ -1,3 +1,7 @@
+/**
+Contains all of the core discount calculations
+*/
+
 function calculateShortfall(amountOfFuelPuchased, discountedAmount, balance){
    
           Logger.log("Fuel amount without any discount (amountOfFuelPuchased) :" + amountOfFuelPuchased);  
