@@ -2,54 +2,72 @@
 <html>
   <head>
     <base target="_top">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <!-- Special version of Bootstrap that only affects content wrapped in .bootstrap-iso -->
+    <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" /> 
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue"></script>
-  
-  <style>
-  .card-deck img {
-    max-width: 300px; 
-  }
-  </style>
-  
+    
+    <!-- Inline CSS based on choices in "Settings" tab -->
+    <style>.bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, 
+      .bootstrap-iso form{font-family: Arial, Helvetica, sans-serif; color: black}
+      .bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;} 
+      .asteriskField{color: red;}
+     </style>
   </head>
   <body>
-  <div class="container">
-  <div class="row">
+  
+  <p><img src="https://drive.google.com/uc?export=download&id=1ogUtDpuTv2Z3cUoJlN3D_JaWMA02Tmz1" width="225" height="75"> </p>
+  
   
   <!-- Reference to the vue instance -->
-  <div class="col-lg-12" id="fueller-app">
-    <p><img src="https://drive.google.com/uc?export=download&id=1ogUtDpuTv2Z3cUoJlN3D_JaWMA02Tmz1" width="225" height="75"> </p>
+  <div id="fueller-app">
   
-  <h1>Fueller pre-paid checker</h1>
- 
-  <p>Pump prices: Unleaded £1.27.9, Diesel 1.29.9<p>
-  <p>Fueller prices: Unleaded £1.23.9, Diesel 1.25.9<p>
   
-  <h4 v-if="isAuthorised"><font color="green">Authorised</font></h4>
-  <h4 v-else-if="customerFound"><font color="red">NOT Authorised - Request customer to top-up £{{shortfall}}</font></h4>
-  <h4 v-else-if="searchPerformed"><font color="red">No Customer found for that fuel card number</font></h4>
+    <!-- HTML Form (wrapped in a .bootstrap-iso div) -->
+    <div class="bootstrap-iso">
+     <div class="container-fluid">
+      <div class="row">
+       <div class="col-md-6 col-sm-6 col-xs-12">
+        <form method="post">
+         <div class="form-group ">
+          <label class="control-label requiredField" for="fuel_card_id">
+           Fuel Card Number
+           <span class="asteriskField">
+            *
+           </span>
+          </label>
+          <input type="number" id="fuelcard-number" name="number" v-model='customer.number' placeholder="00X" >
+          <!--<input class="form-control" id="fuel_card_id" name="fuel_card_id" placeholder="00X" type="text"/>-->
+          <span class="help-block" id="hint_fuel_card_id">
+           Please enter the fuel card number
+          </span>
+         </div>
+          <div class="form-group">
+            <div>
+              <div class="btn btn-primary" id="find-customer-button">Next</div>
+            </div>
+          </div>
+          <div class="form-group ">
+            <div v-if="isAuthorised" class="alert alert-success" role="alert">
+              Authorised
+            </div>
+            <div v-else-if="customerFound" class="alert alert-danger" role="alert">
+              NOT Authorised - Request customer to top-up
+            </div>
+            <div v-else-if="searchPerformed" class="alert alert-danger" role="alert">
+              No Customer found for that fuel card number
+            </div>
+          </div>
+        </form>
+       </div>
+      </div>
+     </div>
+    </div>
+
+  </div><!-- Reference to the vue instance -->
   
-  <div>
-    <h2>Please enter card number</h2>
-    <label for="Card Number">Fuelcard Number (e.g 009)</label>
-    <br>
-    <input type="number" id="fuelcard-number" name="number" v-model='customer.number'>
-    <br>
-    <label for="fuel-amount">Amount</label>
-    <br>
-    <input type="number" id="amount" name="number" v-model='customer.amount'>
-    <br><br>
-    <div class="btn btn-primary" id="find-customer-button">Verify</div>
-    <br>
-  </div>  
-  </div>
-  </div>
-  </div>
   <script type="text/javascript">
-  
   
   var app = new Vue({
     el: '#fueller-app', 
