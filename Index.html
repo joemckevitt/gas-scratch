@@ -43,22 +43,75 @@
            Please enter the fuel card number
           </span>
          </div>
-          <div class="form-group">
+          <div class="form-group" v-if="!isAuthorised">
             <div>
               <div class="btn btn-primary" id="find-customer-button">Next</div>
             </div>
           </div>
           <div class="form-group ">
-            <div v-if="isAuthorised" class="alert alert-success" role="alert">
-              Authorised
-            </div>
-            <div v-else-if="customerFound" class="alert alert-danger" role="alert">
-              NOT Authorised - Request customer to top-up
+            <div v-if="customerFound" class="alert alert-success" role="alert">
+              Please confirm the Customer is: 
             </div>
             <div v-else-if="searchPerformed" class="alert alert-danger" role="alert">
-              No Customer found for that fuel card number
+              No Customer found for this fuel card number 
             </div>
           </div>
+          
+          <div class="form-group" v-if="customerFound">
+            <label class="control-label requiredField" for="fuel_type">
+               Fuel
+             <span class="asteriskField">
+              *
+             </span>
+            </label>
+            <select class="select form-control" id="fuel_type" name="fuel_type">
+             <option disabled selected value> -- select an option -- </option>
+             <option value="Diesel">
+              Diesel
+             </option>
+             <option value="Petrol">
+              Petrol
+             </option>
+            </select>
+            <span class="help-block" id="hint_fuel_type">
+             Please select fuel type
+            </span>
+         </div>
+
+          <div class="form-group" v-if="customerFound">
+              <label class="control-label requiredField" for="fuel_amount">
+               Amount
+               <span class="asteriskField">
+                *
+               </span>
+              </label>
+              <div class="input-group">
+               <div class="input-group-addon">
+                &pound;
+               </div>
+               <input class="form-control" v-model='customer.amount' placeholder="XX.XX" type="number"/>
+              </div>
+              <span class="help-block" id="hint_fuel_amount">
+               Please enter the total amount of fuel spend
+              </span>
+          </div>
+          
+            <div class="form-group" v-if="customerFound">
+            <div>
+              <div class="btn btn-primary" v-on:click="secondStep">Check credit (change it)</div>
+            </div>
+          </div>
+          
+          <!-- need to change the if statements to mirror the actions and results -->
+          <div class="form-group" v-if="customerFound">
+            <div v-if="isAuthorised" class="alert alert-success" role="alert">
+              Done, is Authorised
+            </div>
+            <div v-else-if="creditCheckPerformed" class="alert alert-danger" role="alert">
+              NOT Authorised - Request customer to top-up
+            </div>
+          </div>
+          
         </form>
        </div>
       </div>
@@ -81,8 +134,21 @@
       isAuthorised: false,
       customerFound: false,
       searchPerformed: false,
+      creditCheckPerformed: false,
       shortfall: 0
-    }  
+    },
+    // define methods under the `methods` object
+    methods: {
+      secondStep: function (event) {
+        var customer = {
+          number: app.customer.number, 
+          amount: app.customer.amount, 
+        }; 
+        
+      google.script.run.withSuccessHandler(creditCheckResults).findCustomer(customer);
+        
+      }
+    }
   }); 
     
  document.querySelector('#find-customer-button').addEventListener('click', function(){
@@ -94,24 +160,31 @@
     google.script.run.withSuccessHandler(onCustomerSearchResult).findCustomer(customer); 
   
   });
+
   
   function onCustomerSearchResult(response){
  
    if(response.success) {
       app.customer = response.customer; 
-      app.isAuthorised = response.isAuthorised;
-      if (app.isAuthorised == false) {
-        app.shortfall = response.shortfall;
-      }
       app.customerFound = response.customerFound;
     } else {
       app.customerFound = false;
+    }
+    
+    app.searchPerformed = true; 
+  }
+
+  function creditCheckResults(response){
+ 
+   if(response.success) {
+      app.isAuthorised = response.isAuthorised;
+    } else {
       app.isAuthorised = response.isAuthorised;
       app.customerFound = response.customerFound;
     }
     
-    app.searchPerformed = true; 
-  }  
+    app.creditCheckPerformed = true; 
+  }
   
   </script>
   </body>
