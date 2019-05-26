@@ -2,6 +2,41 @@ var isAuthorised;
 var customerFound;
 var shortfall;
 
+function submitTranscation(transaction){
+  Logger.log("submitTranscation");
+  var cust_num = transaction.number;
+  var amountOfFuelPuchased = transaction.amount;
+  var transactionCode = generateTransactionNumber();
+
+  Logger.log("customer number " + cust_num);
+  Logger.log("amount " + amountOfFuelPuchased);
+  Logger.log("transactionCode " + transactionCode);
+  
+  var doc = SpreadsheetApp.getActive();
+  var sheet = doc.getSheetByName("Transactions");
+  var range;
+
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date+' '+time;
+  
+  Logger.log("dateTime " + dateTime);
+  
+  sheet.appendRow([dateTime, cust_num, amountOfFuelPuchased, transactionCode]);
+  
+  return {
+    transactionNumber: transactionCode
+  };
+    
+}
+
+ function generateTransactionNumber(){
+    var min=1; 
+    var max=1000000;  
+    return Math.floor(Math.random() * (+max - +min)) + +min; 
+ }
+
 function findCustomer(customer){
   Logger.log("find customer invoked " + customer.number);
   

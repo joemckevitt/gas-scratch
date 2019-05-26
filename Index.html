@@ -28,8 +28,10 @@
     <div class="bootstrap-iso">
      <div class="container-fluid">
       <div class="row">
-       <div class="col-md-6 col-sm-6 col-xs-12">
+<div class="col-md-12">
+        <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
         <!--<form method="post">-->
+        
          <div class="form-group" v-if="!customerFound">
           <label class="control-label requiredField" for="fuel_card_id">
            Fuel Card Number
@@ -131,6 +133,8 @@
               <div v-if="showCompleteTransactionMsg" class="btn btn-primary" v-on:click="refreshApp">Refresh</div>
             </div>
            </div> 
+           
+
           
         <!--</form>-->
        </div>
@@ -139,7 +143,7 @@
     </div>
 
   </div><!-- Reference to the vue instance -->
-  
+
   <script type="text/javascript">
   
   var app = new Vue({
@@ -172,8 +176,13 @@
         
       },
       finalStep: function (event) {
-        generateTransactionNumber();
-        this.showCompleteTransactionMsg = true;
+        var transaction = {
+          number: app.customer.number, 
+          amount: app.customer.amount, 
+        }; 
+ 
+        google.script.run.withSuccessHandler(transactionResults).submitTranscation(transaction);
+        
       },
       refreshApp: function (event) {
         window.open("https://script.google.com/macros/s/AKfycbwmi96Gni9Ac0FDOuGMZq1_y3manbyM_4J33R63L5NG/dev",'_top');
@@ -190,8 +199,7 @@
     google.script.run.withSuccessHandler(onCustomerSearchResult).findCustomer(customer); 
   
   });
-
-  
+    
   function onCustomerSearchResult(response){
  
    if(response.success) {
@@ -223,15 +231,12 @@
     app.creditCheckPerformed = true; 
   }
   
- function generateTransactionNumber(){
-    var min=1; 
-    var max=100000;  
-    var random =Math.floor(Math.random() * (+max - +min)) + +min; 
-    app.transCode = random;
-    //document.write("Random Number Generated : " + random ); 
-    //Logger.log("Random Number Generated : " + random );  
+  function transactionResults(response){
+ 
+    app.transCode = response.transactionNumber;        
+    app.showCompleteTransactionMsg = true;
+    
   }
-
   
   </script>
   </body>
