@@ -7,10 +7,12 @@ function submitTranscation(transaction){
   var cust_num = transaction.number;
   var amountOfFuelPuchased = transaction.amount;
   var transactionCode = generateTransactionNumber();
+  var fuelType = transaction.fuelType;
 
   Logger.log("customer number " + cust_num);
   Logger.log("amount " + amountOfFuelPuchased);
   Logger.log("transactionCode " + transactionCode);
+  Logger.log("fuelType " + fuelType);
   
   var doc = SpreadsheetApp.getActive();
   var sheet = doc.getSheetByName("Transactions");
@@ -23,7 +25,7 @@ function submitTranscation(transaction){
   
   Logger.log("dateTime " + dateTime);
   
-  sheet.appendRow([dateTime, cust_num, amountOfFuelPuchased, transactionCode]);
+  sheet.appendRow([dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode]);
   
   return {
     transactionNumber: transactionCode
@@ -79,6 +81,7 @@ function prePaidLogic(data, customer){
   
   var amountOfFuelPuchased = customer.amount;
 
+  //TODO move to the Discount Calculation class
   // apply discount rate - at 4%
   var discountedAmount = amountOfFuelPuchased * 0.96;
   

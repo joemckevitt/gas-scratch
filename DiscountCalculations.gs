@@ -14,6 +14,7 @@ function calculateShortfall(amountOfFuelPuchased, discountedAmount, balance){
          
 }
 
+//TODO no longer used, probably should remove.
 function formatTopupAmount(topupAmountRequired) {
 
           Logger.log("Needs to topup :" + topupAmountRequired);

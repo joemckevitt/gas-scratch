@@ -70,7 +70,7 @@
               *
              </span>
             </label>
-            <select class="select form-control" id="fuel_type" name="fuel_type">
+            <select class="select form-control" id="fuel_type" name="fuel_type" v-model='customer.fuelType'>
              <option disabled selected value> -- select an option -- </option>
              <option value="Diesel">
               Diesel
@@ -152,6 +152,7 @@
       customer: {
          number: '', 
          name: '',
+         fuelType: '',
          amount: '',
       },      
       customers: [],
@@ -170,6 +171,7 @@
         var customer = {
           number: app.customer.number, 
           amount: app.customer.amount, 
+          fuelType: app.customer.amount
         }; 
         
       google.script.run.withSuccessHandler(creditCheckResults).findCustomer(customer);
@@ -178,7 +180,8 @@
       finalStep: function (event) {
         var transaction = {
           number: app.customer.number, 
-          amount: app.customer.amount, 
+          amount: app.customer.amount,
+          fuelType: app.customer.fuelType
         }; 
  
         google.script.run.withSuccessHandler(transactionResults).submitTranscation(transaction);
