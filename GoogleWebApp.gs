@@ -1,8 +1,11 @@
-/**
-Contains all of the logic specific to hosting on google apps
-*/
+function doGet() {
+  var output =  HtmlService
+      .createTemplateFromFile('Index')
+      .evaluate()
+      .setSandboxMode(HtmlService.SandboxMode.NATIVE);
+      
+      //HtmlService.createHtmlOutput('<b>Hello, world!</b>');
+  output.addMetaTag('viewport', 'width=device-width, initial-scale=1');
 
-function doGet(){
-  return HtmlService.createHtmlOutputFromFile('Index').setSandboxMode(HtmlService.SandboxMode.IFRAME)
-  .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL); 
+  return output;
 }
