@@ -2,6 +2,12 @@ var isAuthorised;
 var customerFound;
 var shortfall;
 
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('index');
+}
+
+
+
 function submitTranscation(transaction){
   Logger.log("submitTranscation");
   var cust_num = transaction.number;
@@ -38,27 +44,43 @@ function submitTranscation(transaction){
     var max=1000000;  
     return Math.floor(Math.random() * (+max - +min)) + +min; 
  }
+ 
+ function findCustomer(customer){
 
-function findCustomer(customer){
+  return findCustomerV2(data, customer);
+ }
+
+ 
+function findCustomerV2(data, customer){
   Logger.log("find customer invoked " + customer.number);
   
-  if (prePaidLogic(data, customer)){
+  var result = prePaidLogic(data, customer);
   
-    Logger.log("customer found");
+    Logger.log("results from prePaidLogic " 
+    + " result.tableContainsCustomer=" + result.tableContainsCustomer
+    + ", result.isAuthorised=" + result.isAuthorised
+    + ", result.discountedAmount=" + result.discountedAmount);
+  
+  if (result.tableContainsCustomer){
     
-    if (isAuthorised == false) {
+      Logger.log("customer found " 
+    + ", customer.number=" + result.customer.number 
+    + ", customer.name=" + result.customer.name
+    + ", customer.balance=" + result.customer.balance);
+    
+    if (result.isAuthorised == false) {
        return {
           success: true, 
-          customer: customer,
-          isAuthorised: isAuthorised,
+          customer: result.customer,
+          isAuthorised: result.isAuthorised,
           shortfall: shortfall,
           customerFound: true
       };
     } else {
          return {
           success: true, 
-          customer: customer,
-          isAuthorised: isAuthorised,
+          customer: result.customer,
+          isAuthorised: result.isAuthorised,
           customerFound: true
       };
     }
@@ -74,48 +96,26 @@ function findCustomer(customer){
 
 }
 
-
 function prePaidLogic(data, customer){
-
-  var tableContainsCustomer = false; 
+  
+  //TODO make a local variable and remove global
+  isAuthorised = false;
+  var discountedAmount = 0;
   
   var amountOfFuelPuchased = customer.amount;
-
-  //TODO move to the Discount Calculation class
-  // apply discount rate - at 4%
-  var discountedAmount = amountOfFuelPuchased * 0.96;
   
-  for( var i = 0; i < data.length; i++){
+  var customerFound = lookupCustomer(data, customer.number);
   
-    if (data[i][0]){
-      
-      if(data[i][0].toString() == customer.number.toString()){
-
-        Logger.log("match found " + data[i][0]);   
-        
-        customer = {
-          number: data[i][0], 
-          name: data[i][1],
-          balance: data[i][2],
-        }
-        
-        if (discountedAmount < customer.balance) {
-          Logger.log("Authorised");   
-          isAuthorised = true;
-        } else {
-          Logger.log("NOT Authorised - Request customer to top-up"); 
-          shortfall = calculateShortfall(amountOfFuelPuchased, discountedAmount, customer.balance);
-          isAuthorised = false;
-        }
-        
-        tableContainsCustomer = true;
-        break;
-      } 
-    
-    }
+  if (customerFound != null){
+        discountedAmount = applyDiscount(amountOfFuelPuchased, 100, 96)
+        //TODO calculate shortfall...
+  }    
   
-  }
-    
-  return tableContainsCustomer; 
+  return {
+     tableContainsCustomer: customerFound != null, 
+     isAuthorised: isAuthorisedForTransaction(customerFound, discountedAmount),
+     discountedAmount: discountedAmount,
+     customer: customerFound
+   };
 
 }

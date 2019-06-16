@@ -1,3 +1,29 @@
+//TODO if its not used, remove it
+//function findCustomer(data, customerNumber){
+//
+//  var tableContainsCustomer = false; 
+//  
+//  var customer = lookupCustomer(data, customerNumber);
+//  
+//  return customer != null;
+//  
+//}
+
+function isAuthorisedForTransaction(customer, amountOwed){
+
+  if (customer != null && amountOwed < customer.balance) {
+    Logger.log("Authorised");   
+    return true;
+  } else {
+    Logger.log("NOT Authorised - Request customer to top-up"); 
+    return false;
+  }        
+}
+
+function applyDiscount(amountPurchased, pumpPrice, discountPrice){
+  return amountPurchased * discountPrice/pumpPrice;
+}
+
 /**
 Contains all of the core discount calculations
 */
