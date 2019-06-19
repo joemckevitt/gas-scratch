@@ -1,4 +1,4 @@
-QUnit.helpers( this );
+//QUnit.helpers( this );
 
 //function doGet( e ) {
 //  QUnit.urlParams( e.parameter );

@@ -46,7 +46,6 @@ function submitTranscation(transaction){
  }
  
  function findCustomer(customer){
-
   return findCustomerV2(data, customer);
  }
 
