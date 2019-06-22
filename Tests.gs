@@ -1,13 +1,13 @@
-QUnit.helpers( this );
+//QUnit.helpers( this );
 
-function doGet( e ) {
-  QUnit.urlParams( e.parameter );
-  QUnit.config({
-    title: "QUnit for Google Apps Script - Test suite" // Sets the title of the test page.
-  });
-  QUnit.load( tests );
-  return QUnit.getHtml();
-};
+//function doGet( e ) {
+//  QUnit.urlParams( e.parameter );
+//  QUnit.config({
+//    title: "QUnit for Google Apps Script - Test suite" // Sets the title of the test page.
+//  });
+//  QUnit.load( tests );
+//  return QUnit.getHtml();
+//};
 
 //may use to ensure we always have a clean state...
 //QUnit.testDone(cleanUpTestSideEfects);
