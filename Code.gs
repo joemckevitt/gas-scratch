@@ -8,20 +8,15 @@ function doGet() {
 
 
 
-function submitTranscation(transaction){
+function submitTranscaction(transaction){
   Logger.log("submitTranscation");
 
   var cust_num = transaction.number;
   var amountOfFuelPuchased = transaction.amount;
   var transactionCode = generateTransactionNumber();
   var fuelType = transaction.fuelType;
-  
-  var today = new Date();
-  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  var dateTime = date+' '+time;
     
-  appendRowOnTransactionSheet(dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode);
+  appendRowOnTransactionSheet(cust_num, fuelType, amountOfFuelPuchased, transactionCode);
   
   return {
     transactionNumber: transactionCode

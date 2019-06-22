@@ -35,16 +35,25 @@ function lookupCustomer(data, customerNumber){
 
 }
 
-function appendRowOnTransactionSheet(dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode){
+function appendRowOnTransactionSheet(cust_num, fuelType, amountOfFuelPuchased, transactionCode){
   var doc = SpreadsheetApp.getActive();
   var sheet = doc.getSheetByName("Transactions");
+  var dateTime = generateTimestamp();
   
+  Logger.log("dateTime " + dateTime);
   Logger.log("customer number " + cust_num);
+  Logger.log("fuelType " + fuelType); 
   Logger.log("amount " + amountOfFuelPuchased);
   Logger.log("transactionCode " + transactionCode);
-  Logger.log("fuelType " + fuelType);  
-  Logger.log("dateTime " + dateTime);
-  
+
   sheet.appendRow([dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode]);
+}
+
+function generateTimestamp(){
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date+' '+time;
+  return dateTime;
 }
 

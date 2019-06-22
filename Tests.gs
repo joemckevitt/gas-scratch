@@ -1,13 +1,13 @@
-//QUnit.helpers( this );
+QUnit.helpers( this );
 
-//function doGet( e ) {
-//  QUnit.urlParams( e.parameter );
-//  QUnit.config({
-//    title: "QUnit for Google Apps Script - Test suite" // Sets the title of the test page.
-//  });
-//  QUnit.load( tests );
-//  return QUnit.getHtml();
-//};
+function doGet( e ) {
+  QUnit.urlParams( e.parameter );
+  QUnit.config({
+    title: "QUnit for Google Apps Script - Test suite" // Sets the title of the test page.
+  });
+  QUnit.load( tests );
+  return QUnit.getHtml();
+};
 
 //may use to ensure we always have a clean state...
 //QUnit.testDone(cleanUpTestSideEfects);
@@ -371,7 +371,7 @@ function testSubmitTranscaction(){
         fuelType: 'Diesel'
     }
     
-    var transactionCode = submitTranscation(transaction);
+    var transactionCode = submitTranscaction(transaction);
     
     notEqual( transactionCode, undefined, "transactions code not undefined" );
     notEqual( transactionCode, null, "transactions code is not null" );
@@ -395,3 +395,5 @@ function testSubmitTranscaction(){
 
   });
 }
+
+//what tests if any, do i need to write for appendRowOnTransactionSheet?

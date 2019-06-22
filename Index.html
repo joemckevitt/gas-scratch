@@ -184,7 +184,7 @@
           fuelType: app.customer.fuelType
         }; 
  
-        google.script.run.withSuccessHandler(transactionResults).submitTranscation(transaction);
+        google.script.run.withSuccessHandler(transactionResults).submitTranscaction(transaction);
         
       },
       refreshApp: function (event) {
