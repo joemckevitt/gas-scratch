@@ -9,6 +9,13 @@
 //  return QUnit.getHtml();
 //};
 
+//may use to ensure we always have a clean state...
+//QUnit.testDone(cleanUpTestSideEfects);
+//
+//function cleanUpTestSideEfects(){
+//  console.log('***** . test done invoked *********');
+//}
+
 function tests() {
   console = Logger;
   testIsAuthorised1();
@@ -25,6 +32,7 @@ function tests() {
   testFindCustomerNotAuthorised();
   testFindCustomerReturnsCorrectCustomer();
   testFindCustomerNotAuthorisedReturnsCorrectCustomer();
+  testSubmitTranscaction();
 }
 
 function prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect(){
@@ -353,4 +361,37 @@ function testFindCustomerNotAuthorisedReturnsCorrectCustomer(){
   });
 }
 
-//write unit tests for transation results
+function testSubmitTranscaction(){
+  
+  test("test happy path for submit transaction", function () {  
+  
+    var transaction = {
+        number: 123456, 
+        amount: 100,
+        fuelType: 'Diesel'
+    }
+    
+    var transactionCode = submitTranscation(transaction);
+    
+    notEqual( transactionCode, undefined, "transactions code not undefined" );
+    notEqual( transactionCode, null, "transactions code is not null" );
+
+
+    var spreadsheet = SpreadsheetApp.getActiveSpreadsheet(); 
+    var sheet = spreadsheet.getSheetByName("Transactions"); 
+    // This logs the value in the very last cell of this sheet
+    var lastRow = sheet.getLastRow();
+    
+    //test the expected entry was added to the sheet
+    var actualCustomerNumber = sheet.getRange(lastRow, 2).getValue();
+    equal(actualCustomerNumber, 123456);
+    
+    var actualAmount = sheet.getRange(lastRow, 4).getValue();
+    equal(actualAmount, 100);
+    
+    //**** test side effect clean up code ******
+    //remove the row when the test ends
+    sheet.deleteRow(lastRow);
+
+  });
+}
