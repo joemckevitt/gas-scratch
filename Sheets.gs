@@ -35,3 +35,16 @@ function lookupCustomer(data, customerNumber){
 
 }
 
+function appendRowOnTransactionSheet(dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode){
+  var doc = SpreadsheetApp.getActive();
+  var sheet = doc.getSheetByName("Transactions");
+  
+  Logger.log("customer number " + cust_num);
+  Logger.log("amount " + amountOfFuelPuchased);
+  Logger.log("transactionCode " + transactionCode);
+  Logger.log("fuelType " + fuelType);  
+  Logger.log("dateTime " + dateTime);
+  
+  sheet.appendRow([dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode]);
+}
+

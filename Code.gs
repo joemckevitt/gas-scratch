@@ -10,28 +10,18 @@ function doGet() {
 
 function submitTranscation(transaction){
   Logger.log("submitTranscation");
+
   var cust_num = transaction.number;
   var amountOfFuelPuchased = transaction.amount;
   var transactionCode = generateTransactionNumber();
   var fuelType = transaction.fuelType;
-
-  Logger.log("customer number " + cust_num);
-  Logger.log("amount " + amountOfFuelPuchased);
-  Logger.log("transactionCode " + transactionCode);
-  Logger.log("fuelType " + fuelType);
   
-  var doc = SpreadsheetApp.getActive();
-  var sheet = doc.getSheetByName("Transactions");
-  var range;
-
   var today = new Date();
   var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   var dateTime = date+' '+time;
-  
-  Logger.log("dateTime " + dateTime);
-  
-  sheet.appendRow([dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode]);
+    
+  appendRowOnTransactionSheet(dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode);
   
   return {
     transactionNumber: transactionCode
