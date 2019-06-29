@@ -173,7 +173,7 @@
           fuelType: app.customer.amount
         }; 
         
-      google.script.run.withSuccessHandler(creditCheckResults).findCustomer(customer);
+      google.script.run.withSuccessHandler(creditCheckResults).isCustomerAuthorised(customer);
         
       },
       finalStep: function (event) {

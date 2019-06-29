@@ -25,13 +25,15 @@ function tests() {
   prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero();
   tempTestMultipleCustomers();
   prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect();
+
+  //high level tests (more like component tests)
   testFindCustomerCustomerFound();
   testFindCustomerNotFound();
   testFindCustomerNotFoundReturnsError();
   testFindCustomerIsAuthorised();
   testFindCustomerNotAuthorised();
   testFindCustomerReturnsCorrectCustomer();
-  testFindCustomerNotAuthorisedReturnsCorrectCustomer();
+  testCustomerExistsButNotAuthorised();
   testSubmitTranscaction();
 }
 
@@ -197,14 +199,13 @@ function testFindCustomerCustomerFound(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = findCustomerWrapper(data, customer);
     
     equal(result.success, true);
     equal(result.customerFound, true);
   });
 }
 
-//TODO remove the success flag (not sure it means sense)
 function testFindCustomerNotFound(){
   
   test("test find customer returns false if a customer is not found", function () {  
@@ -220,13 +221,12 @@ function testFindCustomerNotFound(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = findCustomerWrapper(data, customer);
     
     equal(result.customerFound, false);
   });
 }
 
-//TODO remove the success flag (not sure it means sense)
 function testFindCustomerNotFoundReturnsError(){
   
   test("test find customer returns false if a customer is not found", function () {  
@@ -242,11 +242,10 @@ function testFindCustomerNotFoundReturnsError(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = findCustomerWrapper(data, customer);
     
     equal(result.customerFound, false);
     equal(result.error, true);
-    equal(result.isAuthorised, false);
   });
 }
 
@@ -265,7 +264,7 @@ function testFindCustomerIsAuthorised(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = isCustomerAuthorisedWrapper(data, customer);
     
     equal(result.success, true);
     equal(result.isAuthorised, true);
@@ -288,7 +287,7 @@ function testFindCustomerNotAuthorised(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = isCustomerAuthorisedWrapper(data, customer);
     
     equal(result.success, true);
     equal(result.isAuthorised, false);
@@ -311,7 +310,7 @@ function testFindCustomerReturnsCorrectCustomer(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = findCustomerWrapper(data, customer);
     
     var actualCustomer = result.customer;
     
@@ -328,7 +327,8 @@ function testFindCustomerReturnsCorrectCustomer(){
   });
 }
 
-function testFindCustomerNotAuthorisedReturnsCorrectCustomer(){
+//TODO this test is a design problem, testing two things
+function testCustomerExistsButNotAuthorised(){
   
   test("test find customer, returns correct customer for customers who are not authorised", function () {  
   
@@ -343,7 +343,7 @@ function testFindCustomerNotAuthorisedReturnsCorrectCustomer(){
       amount: 100
     }
     
-    var result = findCustomerV2(data, customer);
+    var result = isCustomerAuthorisedWrapper(data, customer);
     
     var actualCustomer = result.customer;
     
@@ -413,3 +413,4 @@ function cleanUpTestSideEfectsOnActivity(){
 //write a test for when the sheet does not exist
 //verify shortfall
 //remove shortfall from the find customer method
+//TODO fix the text 'temp happy path'
