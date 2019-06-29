@@ -49,6 +49,20 @@ function appendRowOnTransactionSheet(cust_num, fuelType, amountOfFuelPuchased, t
   sheet.appendRow([dateTime, cust_num, fuelType, amountOfFuelPuchased, transactionCode]);
 }
 
+function appendRowOnActivitySheet(activityName, fields){
+  var doc = SpreadsheetApp.getActive();
+  var sheet = doc.getSheetByName("Activity");
+  var dateTime = generateTimestamp();
+  
+  //append timestamp and activity to the beginnning of the row
+  fields.unshift(activityName);
+  fields.unshift(dateTime);
+  Logger.log("********** appendRowOnActivitySheet *****************");
+  Logger.log(fields);
+  Logger.log("********** appendRowOnActivitySheet *****************");
+  sheet.appendRow(fields);
+}
+
 function generateTimestamp(){
   var today = new Date();
   var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();

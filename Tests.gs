@@ -1,20 +1,20 @@
-//QUnit.helpers( this );
+/*
+  Important - do not run these unit tests in production
+  When we run each test, there is a side effect that appends the row to the activity sheet
+  The cleanUpTestSideEfectsOnActivity() cleans the activity sheet after each test 
+*/
 
+//QUnit.helpers( this );
 //function doGet( e ) {
 //  QUnit.urlParams( e.parameter );
 //  QUnit.config({
-//    title: "QUnit for Google Apps Script - Test suite" // Sets the title of the test page.
+//    title: "Test suite for Fueller" 
 //  });
+//  QUnit.testDone(cleanUpTestSideEfectsOnActivity);
 //  QUnit.load( tests );
 //  return QUnit.getHtml();
 //};
 
-//may use to ensure we always have a clean state...
-//QUnit.testDone(cleanUpTestSideEfects);
-//
-//function cleanUpTestSideEfects(){
-//  console.log('***** . test done invoked *********');
-//}
 
 function tests() {
   console = Logger;
@@ -396,4 +396,20 @@ function testSubmitTranscaction(){
   });
 }
 
+//may use to ensure we always have a clean state...
+function cleanUpTestSideEfectsOnActivity(){
+  console.log('***** . test done invoked *********');
+  var doc = SpreadsheetApp.getActive();
+  var sheet = doc.getSheetByName("Activity");
+  var lastRow = sheet.getLastRow();
+  //TODO add more inteligence to the remove method to ensure its only removing test fixtures
+  if (lastRow){
+    sheet.deleteRow(lastRow);
+  }
+  
+}
+
 //what tests if any, do i need to write for appendRowOnTransactionSheet?
+//write a test for when the sheet does not exist
+//verify shortfall
+//remove shortfall from the find customer method

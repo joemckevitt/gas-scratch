@@ -2,12 +2,6 @@ var isAuthorised;
 var customerFound;
 var shortfall;
 
-function doGet() {
-  return HtmlService.createHtmlOutputFromFile('index');
-}
-
-
-
 function submitTranscaction(transaction){
   Logger.log("submitTranscation");
 
@@ -40,23 +34,22 @@ function findCustomerV2(data, customer){
   
   var result = prePaidLogic(data, customer);
   
-    Logger.log("results from prePaidLogic " 
-    + " result.tableContainsCustomer=" + result.tableContainsCustomer
-    + ", result.isAuthorised=" + result.isAuthorised
-    + ", result.discountedAmount=" + result.discountedAmount);
+  var fields = ["customer number", customer.number,
+                "customerFound", result.tableContainsCustomer,
+                "name", (result.customer ? result.customer.name : "undefined"),
+                "balance", (result.customer ? result.customer.balance : "undefined"),
+                "isAuthorised", result.isAuthorised,];
+  
+  appendRowOnActivitySheet("findCustomer", fields);
   
   if (result.tableContainsCustomer){
-    
-      Logger.log("customer found " 
-    + ", customer.number=" + result.customer.number 
-    + ", customer.name=" + result.customer.name
-    + ", customer.balance=" + result.customer.balance);
-    
+        
     if (result.isAuthorised == false) {
        return {
           success: true, 
           customer: result.customer,
           isAuthorised: result.isAuthorised,
+          //remove shortfall from the find customer method
           shortfall: shortfall,
           customerFound: true
       };
