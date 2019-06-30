@@ -132,6 +132,8 @@ function submitTranscaction(transaction){
   var fuelType = transaction.fuelType;
     
   appendRowOnTransactionSheet(cust_num, fuelType, amountOfFuelPuchased, transactionCode);
+
+  dispatchMailHtmlTemplate(transactionCode, generateTimestamp(), cust_num, fuelType, amountOfFuelPuchased);
   
   return {
     transactionNumber: transactionCode
