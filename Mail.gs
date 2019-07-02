@@ -36,8 +36,8 @@ function dispatchMailHtmlTemplate(transactionNo, timestamp, customerNo, fuelType
 
 function dispatchMail(subject, message) {
   
-  var recipientsTO = "joemckevittrun@gmail.com";
-  var recipientsCC = "josephmckevitt@hotmail.com";
+  var recipientsTO = "gordon@fuellerapp.com";
+  var recipientsCC = "joe@fuellerapp.com";
   var html = message;
 
   MailApp.sendEmail({
