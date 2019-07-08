@@ -35,7 +35,10 @@ function dispatchMailHtmlTemplate(transactionNo, timestamp, customerNo, fuelType
 }
 
 function dispatchMail(subject, message) {
-  
+
+// uncomment during staging env/testing app
+//    var recipientsTO = "joe@fuellerapp.com";
+
   var recipientsTO = "gordon@fuellerapp.com";
   var recipientsCC = "joe@fuellerapp.com";
   var html = message;

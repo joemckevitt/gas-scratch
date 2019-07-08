@@ -1,14 +1,3 @@
-//TODO if its not used, remove it
-//function findCustomer(data, customerNumber){
-//
-//  var tableContainsCustomer = false; 
-//  
-//  var customer = lookupCustomer(data, customerNumber);
-//  
-//  return customer != null;
-//  
-//}
-
 function isAuthorisedForTransaction(customer, amountOwed){
 
   if (customer != null && amountOwed < customer.balance) {
@@ -21,7 +10,8 @@ function isAuthorisedForTransaction(customer, amountOwed){
 }
 
 function applyDiscount(amountPurchased, pumpPrice, discountPrice){
-  return amountPurchased * discountPrice/pumpPrice;
+  var pumpPriceDetails = findPumpPrice("Diesel");
+  return amountPurchased * pumpPriceDetails.discountedPrice/pumpPriceDetails.pumpPrice;
 }
 
 /**
@@ -30,25 +20,25 @@ Contains all of the core discount calculations
 
 function calculateShortfall(amountOfFuelPuchased, discountedAmount, balance){
    
-          Logger.log("Fuel amount without any discount (amountOfFuelPuchased) :" + amountOfFuelPuchased);  
-          Logger.log("Fuel amount with discount (discountedAmount) :" + discountedAmount); 
-          Logger.log("Balance (customer.balance) :" + balance);
+  Logger.log("Fuel amount without any discount (amountOfFuelPuchased) :" + amountOfFuelPuchased);  
+  Logger.log("Fuel amount with discount (discountedAmount) :" + discountedAmount); 
+  Logger.log("Balance (customer.balance) :" + balance);
           
-          topupAmountRequired = discountedAmount - balance;
+  topupAmountRequired = discountedAmount - balance;
 
-          return formatTopupAmount(topupAmountRequired);
+  return formatTopupAmount(topupAmountRequired);
          
 }
 
 //TODO no longer used, probably should remove.
 function formatTopupAmount(topupAmountRequired) {
 
-          Logger.log("Needs to topup :" + topupAmountRequired);
+  Logger.log("Needs to topup :" + topupAmountRequired);
           
-          var roundedTo2Decs = Math.round(topupAmountRequired * 100) / 100;
-          shortfall = Number(Math.round(roundedTo2Decs+'e2')+'e-2').toFixed(2);
+  var roundedTo2Decs = Math.round(topupAmountRequired * 100) / 100;
+  shortfall = Number(Math.round(roundedTo2Decs+'e2')+'e-2').toFixed(2);
           
-          Logger.log("Topup value, rounded by 2 decimal places (Shortfall) :" + shortfall);
+  Logger.log("Topup value, rounded by 2 decimal places (Shortfall) :" + shortfall);
           
-          return shortfall;
+  return shortfall;
 }

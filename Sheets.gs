@@ -6,6 +6,43 @@ var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 var CUSTOMERS_TABLE = spreadsheet.getSheetByName(readingsSheet); 
 var data = CUSTOMERS_TABLE.getDataRange().getValues();
 
+  function findPumpPrice(fuelType){
+  
+    var doc = SpreadsheetApp.getActive();
+    var sheet = doc.getSheetByName("PumpPrices");
+    var lastRow = sheet.getLastRow();
+    
+    var ppNum = sheet.getRange(lastRow, 1).getValue(); 
+    Logger.log("Pump Price record number " + ppNum);
+    
+    Logger.log("fuelType " + fuelType);
+    
+    if (fuelType === "Diesel"){
+      var pumpPrice = sheet.getRange(lastRow, 4).getValue();      
+      var discountedPrice = sheet.getRange(lastRow, 5).getValue();
+    } else if (fuelType === "Petrol") {
+      var pumpPrice = sheet.getRange(lastRow, 7).getValue();      
+      var discountedPrice = sheet.getRange(lastRow, 8).getValue();    
+    } else {
+        Logger.log("fueltype not recognised");
+        return {
+          success: false
+        }
+    }
+    
+    //read values, default to diesel
+
+    Logger.log("pumpPrice " + pumpPrice);
+    Logger.log("discountedPrice " + discountedPrice);
+    
+    return  {
+      success: true,
+      fuelType: fuelType, 
+      pumpPrice: pumpPrice,
+      discountedPrice: discountedPrice
+    };
+  }
+
 function lookupCustomer(data, customerNumber){
 
   for( var i = 0; i < data.length; i++){

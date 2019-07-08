@@ -12,7 +12,6 @@ var shortfall;
   return isCustomerAuthorisedWrapper(data, customer);
  }
 
-//TODO rename to a better method name
 function findCustomerWrapper(data, customer){
   Logger.log("find customer invoked " + customer.number);
   
@@ -43,7 +42,6 @@ function findCustomerWrapper(data, customer){
 
 }
 
-//TODO rename to a better method name
 function isCustomerAuthorisedWrapper(data, customer){
   Logger.log("find customer invoked " + customer.number);
   
@@ -74,7 +72,7 @@ function isCustomerAuthorisedWrapper(data, customer){
   
 }
 
-
+//TODO remove this method and update hte dependencies that call it
 function prePaidLogic(data, customer){
   
   //TODO make a local variable and remove global
@@ -141,7 +139,6 @@ function submitTranscaction(transaction){
     
 }
 
-//TODO i think this is a dup, check and remove
  function generateTransactionNumber(){
     var min=1; 
     var max=1000000;  

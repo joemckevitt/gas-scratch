@@ -20,12 +20,8 @@ function tests() {
   console = Logger;
   testIsAuthorised1();
   testIsAuthorised2();
-  testApplyDiscount1();
-  prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect();
-  prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero();
-  tempTestMultipleCustomers();
-  prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect();
-
+  testApplyDiscount();
+  
   //high level tests (more like component tests)
   testFindCustomerCustomerFound();
   testFindCustomerNotFound();
@@ -33,13 +29,28 @@ function tests() {
   testFindCustomerIsAuthorised();
   testFindCustomerNotAuthorised();
   testFindCustomerReturnsCorrectCustomer();
+  tempTestMultipleCustomers();
   testCustomerExistsButNotAuthorised();
   testSubmitTranscaction();
+  
+  //** related to asserting discounted prices
+  //**********************************************************************************
+  //unit tests for looking up pump prices
+  testLookupPumpRateForDiesel();
+  testLookupPumpRateForPetrol();
+  testLookupPumpRateForInvalidPumpType();
+  
+  //TODO review whether these tests are still required (or covered with other tests)
+  prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect();
+  prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero();
+  prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect();
+  //**********************************************************************************  
+  
 }
 
 function prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect(){
   
-  test("temp test happy path", function () {  
+  test("return correct discounted amount for authorised customer", function () {  
   
   var data = new Array(1)
   data[0]=new Array(1);
@@ -56,14 +67,14 @@ function prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect(){
   
   equal(result.tableContainsCustomer, true);
   equal(result.isAuthorised, true);
-  equal(result.discountedAmount, 96);
+  equal(result.discountedAmount, 95);
   
   });
 }
 
 function prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero(){
   
-  test("temp test happy path", function () {  
+  test("return discounted amount of zero for customer not found", function () {  
   
   var data = new Array(1)
   data[0]=new Array(1);
@@ -85,38 +96,9 @@ function prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero(){
   });
 }
 
-function tempTestMultipleCustomers(){
-  
-  test("temp test happy path", function () {  
-  
-  var data = new Array(2)
-  data[0]=new Array(1);
-  data[0][0] = 1
-  data[0][1] = "Joe"
-  data[0][2] = 50
-  
-  data[1]=new Array(1);
-  data[1][0] = 2
-  data[1][1] = "Gordon"
-  data[1][2] = 500
-
-  var customer = {
-    number: 2,
-    amount: 100
-  }
-  
-  var result = prePaidLogic(data, customer);
-  
-  equal(result.tableContainsCustomer, true);
-  equal(result.isAuthorised, true);
-  equal(result.discountedAmount, 96);
-  
-  });
-}
-
 function prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect(){
   
-  test("temp test happy path", function () {  
+  test("return correct discount for custoemr found but not authorised", function () {  
   
   var data = new Array(1)
   data[0]=new Array(1);
@@ -133,7 +115,7 @@ function prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect(){
   
   equal(result.tableContainsCustomer, true);
   equal(result.isAuthorised, false);
-  equal(result.discountedAmount, 96);
+  equal(result.discountedAmount, 95);
   
   });
 }
@@ -168,12 +150,12 @@ function testIsAuthorised2(){
   });
 }
 
-function testApplyDiscount1(){
+function testApplyDiscount(){
 
   var amountPurchased = 100;
   var pumpFuelPrice = 1;
   var discountedFuelPrice = 0.5
-  var expectedResult = 50
+  var expectedResult = 95
 
   test("applyDiscount should return ["+expectedResult+"] when the petrol price is ["+pumpFuelPrice+"] " + 
     "and the discounted price is ["+discountedFuelPrice+"] " + 
@@ -361,6 +343,44 @@ function testCustomerExistsButNotAuthorised(){
   });
 }
 
+function tempTestMultipleCustomers(){
+  
+  test("returns correct customer given multiple customers", function () {  
+  
+  var data = new Array(2)
+  data[0]=new Array(1);
+  data[0][0] = 1
+  data[0][1] = "Joe"
+  data[0][2] = 50
+  
+  data[1]=new Array(1);
+  data[1][0] = 2
+  data[1][1] = "Gordon"
+  data[1][2] = 500
+
+  var customer = {
+    number: 2,
+    amount: 100
+  }
+  
+  var expectedCustomer = {
+      number: 2, 
+      name: "Gordon",
+      balance: 500
+  }
+  
+  var result = isCustomerAuthorisedWrapper(data, customer);
+
+  var actualCustomer = result.customer;
+  
+  equal(actualCustomer.number, expectedCustomer.number);
+  equal(actualCustomer.name, expectedCustomer.name);
+  equal(actualCustomer.balance, expectedCustomer.balance);
+  
+  
+  });
+}
+
 function testSubmitTranscaction(){
   
   test("test happy path for submit transaction", function () {  
@@ -393,6 +413,42 @@ function testSubmitTranscaction(){
     //remove the row when the test ends
     sheet.deleteRow(lastRow);
 
+  });
+}
+
+function testLookupPumpRateForDiesel(){
+  
+  test("test looking up the pump price for Diesel", function () {  
+    
+    var result = findPumpPrice("Diesel");
+    
+    equal(result.success, true);
+    equal(result.fuelType, "Diesel");
+    equal(result.pumpPrice, 100);
+    equal(result.discountedPrice, 95);
+  });
+}
+
+function testLookupPumpRateForPetrol(){
+  
+  test("test looking up the pump price for Petrol", function () {  
+  
+    var result = findPumpPrice("Petrol");
+    
+    equal(result.success, true);
+    equal(result.fuelType, "Petrol");
+    equal(result.pumpPrice, 100);
+    equal(result.discountedPrice, 80);
+  });
+}
+
+function testLookupPumpRateForInvalidPumpType(){
+  
+  test("test looking up the pump price for Invalid pump type", function () {  
+  
+    var result = findPumpPrice("invalid");
+    
+    equal(result.success, false);
   });
 }
 
