@@ -9,9 +9,29 @@ function isAuthorisedForTransaction(customer, amountOwed){
   }        
 }
 
-function applyDiscount(amountPurchased, pumpPrice, discountPrice){
-  var pumpPriceDetails = findPumpPrice("Diesel");
-  return amountPurchased * pumpPriceDetails.discountedPrice/pumpPriceDetails.pumpPrice;
+function applyDiscount(amountPurchased, fuelType, pumpPriceDetails){
+  //TODO valid inputs (check for valid fuelType)
+  Logger.log("***** applyDiscount *****");
+  
+  fuelType = fuelType.toLowerCase();
+  Logger.log("fuelType : " + fuelType);
+  
+  if (fuelType == "diesel") {
+    var discountPrice = pumpPriceDetails.diesel;    
+  } else if (fuelType == "petrol") {
+    var discountPrice = pumpPriceDetails.petrol;    
+  } else {
+      throw new Error('unrecognised fuel type!');
+  }
+  
+  Logger.log("amountPurchased " + amountPurchased); 
+  Logger.log("fuelType " + fuelType); 
+  Logger.log("discountPrice " + discountPrice); 
+  
+  var result = amountPurchased * discountPrice;
+  Logger.log("discount amount calculated" + result); 
+  Logger.log("***** applyDiscount *****"); 
+  return result;
 }
 
 /**

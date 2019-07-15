@@ -170,7 +170,7 @@
         var customer = {
           number: app.customer.number, 
           amount: app.customer.amount, 
-          fuelType: app.customer.amount
+          fuelType: app.customer.fuelType
         }; 
         
       google.script.run.withSuccessHandler(creditCheckResults).isCustomerAuthorised(customer);

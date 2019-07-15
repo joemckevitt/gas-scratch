@@ -20,7 +20,12 @@ function tests() {
   console = Logger;
   testIsAuthorised1();
   testIsAuthorised2();
-  testApplyDiscount();
+  
+  testApplyDiscountForDiesel();
+  testApplyDiscountForPetrol();
+  testApplyDiscountForBothFuelTypes();
+  testApplyDiscountForUnRecognisedFuelType();
+  testApplyDiscountForLowerCaseFuelType();
   
   //high level tests (more like component tests)
   testFindCustomerCustomerFound();
@@ -36,11 +41,9 @@ function tests() {
   //** related to asserting discounted prices
   //**********************************************************************************
   //unit tests for looking up pump prices
-  testLookupPumpRateForDiesel();
-  testLookupPumpRateForPetrol();
-  testLookupPumpRateForInvalidPumpType();
-  
-  //TODO review whether these tests are still required (or covered with other tests)
+  testLookupPumpRate();
+
+//  //TODO review whether these tests are still required (or covered with other tests)
   prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect();
   prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero();
   prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect();
@@ -67,7 +70,7 @@ function prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect(){
   
   equal(result.tableContainsCustomer, true);
   equal(result.isAuthorised, true);
-  equal(result.discountedAmount, 95);
+  equal(result.discountedAmount, 96);
   
   });
 }
@@ -115,7 +118,7 @@ function prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect(){
   
   equal(result.tableContainsCustomer, true);
   equal(result.isAuthorised, false);
-  equal(result.discountedAmount, 95);
+  equal(result.discountedAmount, 96);
   
   });
 }
@@ -146,22 +149,6 @@ function testIsAuthorised2(){
   }
     
   equal(isAuthorisedForTransaction(customer, 100), false);
-  
-  });
-}
-
-function testApplyDiscount(){
-
-  var amountPurchased = 100;
-  var pumpFuelPrice = 1;
-  var discountedFuelPrice = 0.5
-  var expectedResult = 95
-
-  test("applyDiscount should return ["+expectedResult+"] when the petrol price is ["+pumpFuelPrice+"] " + 
-    "and the discounted price is ["+discountedFuelPrice+"] " + 
-    "and the amount purchased is ["+amountPurchased+"]", function () {
-
-  equal(applyDiscount(amountPurchased, pumpFuelPrice, discountedFuelPrice), expectedResult);
   
   });
 }
@@ -243,7 +230,8 @@ function testFindCustomerIsAuthorised(){
     
     var customer = {
       number: 1, 
-      amount: 100
+      amount: 100,
+      fuelType: "Diesel"
     }
     
     var result = isCustomerAuthorisedWrapper(data, customer);
@@ -266,7 +254,8 @@ function testFindCustomerNotAuthorised(){
   
     var customer = {
       number: 1, 
-      amount: 100
+      amount: 100,
+      fuelType: "Diesel"
     }
     
     var result = isCustomerAuthorisedWrapper(data, customer);
@@ -289,7 +278,8 @@ function testFindCustomerReturnsCorrectCustomer(){
   
     var customer = {
       number: 1, 
-      amount: 100
+      amount: 100,      
+      fuelType: "Diesel"
     }
     
     var result = findCustomerWrapper(data, customer);
@@ -322,7 +312,8 @@ function testCustomerExistsButNotAuthorised(){
   
     var customer = {
       number: 1, 
-      amount: 100
+      amount: 100,
+      fuelType: "Diesel"
     }
     
     var result = isCustomerAuthorisedWrapper(data, customer);
@@ -360,7 +351,8 @@ function tempTestMultipleCustomers(){
 
   var customer = {
     number: 2,
-    amount: 100
+    amount: 100,
+    fuelType: "Diesel"    
   }
   
   var expectedCustomer = {
@@ -416,39 +408,119 @@ function testSubmitTranscaction(){
   });
 }
 
-function testLookupPumpRateForDiesel(){
+function testLookupPumpRate(){
   
   test("test looking up the pump price for Diesel", function () {  
     
-    var result = findPumpPrice("Diesel");
+    var result = findPumpPrice();
     
-    equal(result.success, true);
-    equal(result.fuelType, "Diesel");
-    equal(result.pumpPrice, 100);
-    equal(result.discountedPrice, 95);
+    equal(result.diesel, 0.96);
+    equal(result.petrol, 0.95);
   });
 }
 
-function testLookupPumpRateForPetrol(){
+
+function testApplyDiscountForDiesel(){
+
+  var fuelType = "Diesel";
+  var amountPurchased = 100;
+  var discountedFuelPrice = 0.96;
+  var expectedResult = 96;
+ 
+  var pumpPricesDetails = {
+      diesel: discountedFuelPrice,
+      petrol: 0.95 
+  };
+
+  test("applyDiscount should return ["+expectedResult+"] when the discounted price is ["+discountedFuelPrice+"] per litre " + 
+    "and the amount purchased is ["+amountPurchased+"] " + 
+    "and the fuel type is ["+fuelType+"] ", function () { 
+
+  equal(applyDiscount(amountPurchased, fuelType, pumpPricesDetails), expectedResult);
   
-  test("test looking up the pump price for Petrol", function () {  
-  
-    var result = findPumpPrice("Petrol");
-    
-    equal(result.success, true);
-    equal(result.fuelType, "Petrol");
-    equal(result.pumpPrice, 100);
-    equal(result.discountedPrice, 80);
   });
 }
 
-function testLookupPumpRateForInvalidPumpType(){
+function testApplyDiscountForPetrol(){
+
+  var amountPurchased = 100;
+  var discountedFuelPrice = 0.96;
+  var expectedResult = 95;
+  var fuelType = "Petrol";
   
-  test("test looking up the pump price for Invalid pump type", function () {  
+  var pumpPricesDetails = {
+      diesel: 0.96,
+      petrol: 0.95 
+  };
+
+  test("applyDiscount should return ["+expectedResult+"] when the discounted price is ["+discountedFuelPrice+"] per litre " + 
+    "and the amount purchased is ["+amountPurchased+"] " + 
+    "and the fuel type is ["+fuelType+"] ", function () { 
+
+  equal(applyDiscount(amountPurchased, fuelType, pumpPricesDetails), 95);
   
-    var result = findPumpPrice("invalid");
+  });
+}
+
+function testApplyDiscountForBothFuelTypes(){
+
+  var amountPurchased = 100;
+  var pumpFuelPrice = 1;
+  var discountedFuelPrice = 0.96;
+  var expectedResult = 96;
+  var fuelType = "Petrol";
+  
+  var pumpPricesDetails = {
+      diesel: 0.96,
+      petrol: 0.95 
+  };
     
-    equal(result.success, false);
+  test("test the Petrol discount followed by the Diesel discount", function () { 
+
+  //First test the Petrol discount
+  equal(applyDiscount(amountPurchased, "Petrol", pumpPricesDetails), 95);
+  
+  //Followed by the Diesel discount
+  equal(applyDiscount(amountPurchased, "Diesel", pumpPricesDetails), 96);
+  
+  });
+}
+
+function testApplyDiscountForUnRecognisedFuelType(){
+  
+  var amountPurchased = 100;
+  var pumpPricesDetails = {
+      diesel: 0.96,
+      petrol: 0.95 
+  };
+    
+  test("test discount throws error on invalid fuel type", function () {
+
+    throws(function(){ applyDiscount(amountPurchased, "Invalid-Fueltype", pumpPricesDetails)}, 
+      Error,
+      "throws error on unrecognised fuel type"
+    );
+    
+  });
+}
+
+function testApplyDiscountForLowerCaseFuelType(){
+
+  var fuelType = "diesel";
+  var amountPurchased = 100;
+  var discountedFuelPrice = 0.96;
+  var expectedResult = 96;
+ 
+  var pumpPricesDetails = {
+      diesel: discountedFuelPrice,
+      petrol: 0.95 
+  };
+
+  test("applyDiscount should be case sensitative when dealing with fuel types ", function () { 
+
+  equal(applyDiscount(amountPurchased, fuelType, pumpPricesDetails), expectedResult);
+  equal(applyDiscount(amountPurchased, "petrol", pumpPricesDetails), 95);
+  
   });
 }
 
@@ -470,3 +542,4 @@ function cleanUpTestSideEfectsOnActivity(){
 //verify shortfall
 //remove shortfall from the find customer method
 //TODO fix the text 'temp happy path'
+//TODO add tests to cover use cases of invalidate parameters into function method
