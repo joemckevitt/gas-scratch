@@ -43,7 +43,7 @@ function tests() {
   //unit tests for looking up pump prices
   testLookupPumpRate();
 
-//  //TODO review whether these tests are still required (or covered with other tests)
+  //TODO review whether these tests are still required (or covered with other tests)
   prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect();
   prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero();
   prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect();
@@ -63,14 +63,13 @@ function prePaidLogicCustomerFoundIsAuthorisedAndDiscountAmountCorrect(){
 
   var customer = {
     number: 1, 
-    amount: 100
+    amount: 100,
+    fuelType: 'Diesel'
   }
   
-  var result = prePaidLogic(data, customer);
+  var result = prePaidLogicForIsAuthorised(data, customer);
   
-  equal(result.tableContainsCustomer, true);
   equal(result.isAuthorised, true);
-  equal(result.discountedAmount, 96);
   
   });
 }
@@ -95,7 +94,6 @@ function prePaidLogicCustomerNotFoundNotAuthorisedAndDiscountAmountZero(){
   equal(result.tableContainsCustomer, false);
   //TODO fix this should default to false
   equal(result.isAuthorised, false);
-  equal(result.discountedAmount, 0);
   });
 }
 
@@ -118,7 +116,6 @@ function prePaidLogicCustomerFoundNotAuthorisedAndDiscountAmountCorrect(){
   
   equal(result.tableContainsCustomer, true);
   equal(result.isAuthorised, false);
-  equal(result.discountedAmount, 96);
   
   });
 }
@@ -414,8 +411,8 @@ function testLookupPumpRate(){
     
     var result = findPumpPrice();
     
-    equal(result.diesel, 0.96);
-    equal(result.petrol, 0.95);
+    equal(result.diesel, 1.16);
+    equal(result.petrol, 1.17);
   });
 }
 
@@ -543,3 +540,4 @@ function cleanUpTestSideEfectsOnActivity(){
 //remove shortfall from the find customer method
 //TODO fix the text 'temp happy path'
 //TODO add tests to cover use cases of invalidate parameters into function method
+//applyDiscount fuelType is undefined, throw error

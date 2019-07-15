@@ -52,7 +52,9 @@ function prePaidLogicForIsAuthorised(data, customer){
   
   return {
      isAuthorised: isAuthorisedForTransaction(customerFound, discountedAmount),
+     //TODO should we remove this?
      discountedAmount: discountedAmount,
+     //TODO should we remove this?
      customer: customerFound
    };
 
