@@ -4,16 +4,16 @@
   The cleanUpTestSideEfectsOnActivity() cleans the activity sheet after each test 
 */
 
-QUnit.helpers( this );
-function doGet( e ) {
-  QUnit.urlParams( e.parameter );
-  QUnit.config({
-    title: "Test suite for Fueller" 
-  });
-  QUnit.testDone(cleanUpTestSideEfectsOnActivity);
-  QUnit.load( tests );
-  return QUnit.getHtml();
-};
+//QUnit.helpers( this );
+//function doGet( e ) {
+//  QUnit.urlParams( e.parameter );
+//  QUnit.config({
+//    title: "Test suite for Fueller" 
+//  });
+//  QUnit.testDone(cleanUpTestSideEfectsOnActivity);
+//  QUnit.load( tests );
+//  return QUnit.getHtml();
+//};
 
 
 function tests() {
