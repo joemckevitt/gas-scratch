@@ -4,16 +4,16 @@
   The cleanUpTestSideEfectsOnActivity() cleans the activity sheet after each test 
 */
 
-//QUnit.helpers( this );
-//function doGet( e ) {
-//  QUnit.urlParams( e.parameter );
-//  QUnit.config({
-//    title: "Test suite for Fueller" 
-//  });
-//  QUnit.testDone(cleanUpTestSideEfectsOnActivity);
-//  QUnit.load( tests );
-//  return QUnit.getHtml();
-//};
+QUnit.helpers( this );
+function doGet( e ) {
+  QUnit.urlParams( e.parameter );
+  QUnit.config({
+    title: "Test suite for Fueller" 
+  });
+  QUnit.testDone(cleanUpTestSideEfectsOnActivity);
+  QUnit.load( tests );
+  return QUnit.getHtml();
+};
 
 
 function tests() {
@@ -411,8 +411,8 @@ function testLookupPumpRate(){
     
     var result = findPumpPrice();
     
-    equal(result.diesel, 1.16);
-    equal(result.petrol, 1.17);
+    equal(result.diesel, 0.97);
+    equal(result.petrol, 0.97);
   });
 }
 

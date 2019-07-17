@@ -14,16 +14,30 @@ function findPumpPrice(){
     
     var ppNum = sheet.getRange(lastRow, 1).getValue(); 
     Logger.log("Pump Price record number " + ppNum);
-    
+
+    var pumpPriceForDiesel = sheet.getRange(lastRow, 4).getValue();
     var discountedPriceForDiesel = sheet.getRange(lastRow, 5).getValue();
+
+    var pumpPriceForPetrol = sheet.getRange(lastRow, 7).getValue();  
     var discountedPriceForPetrol = sheet.getRange(lastRow, 8).getValue();  
     
+    Logger.log("pumpPriceForDiesel " + pumpPriceForDiesel);
     Logger.log("discountedPriceForDiesel " + discountedPriceForDiesel);
     Logger.log("discountedPriceForPetrol " + discountedPriceForPetrol);
     
+    var calculatedDiscountRateForDiesel = discountedPriceForDiesel / pumpPriceForDiesel;
+    Logger.log("calculatedDiscountRateForDiesel " + calculatedDiscountRateForDiesel);
+    var calculatedDiscountRateForDieselRounded = Number(Math.round(calculatedDiscountRateForDiesel+'e2')+'e-2').toFixed(2);
+    Logger.log("calculatedDiscountRateForDieselRounded " + calculatedDiscountRateForDieselRounded);
+    
+    var calculatedDiscountRateForPetrol = discountedPriceForPetrol / pumpPriceForPetrol;
+    Logger.log("calculatedDiscountRateForDiesel " + calculatedDiscountRateForPetrol);
+    var calculatedDiscountRateForPetrolRounded = Number(Math.round(calculatedDiscountRateForPetrol+'e2')+'e-2').toFixed(2);
+    Logger.log("calculatedDiscountRateForDieselRounded " + calculatedDiscountRateForPetrolRounded);    
+    
     return  {
-      diesel: discountedPriceForDiesel,
-      petrol: discountedPriceForPetrol, 
+      diesel: calculatedDiscountRateForDieselRounded,
+      petrol: calculatedDiscountRateForPetrolRounded, 
     };
 }
 
