@@ -12,6 +12,8 @@ function isCustomerAuthorisedWrapper(data, customer){
                 "name", (result.customer ? result.customer.name : "undefined"),
                 "balance", (result.customer ? result.customer.balance : "undefined"),
                 "fuel type", customer.fuelType,
+                "originalAmount", customer.amount,
+                "discountedAmount", (result.discountedAmount ? result.discountedAmount : "undefined"),
                 "isAuthorised", result.isAuthorised,];
   
   appendRowOnActivitySheet("isAuthorised", fields);
